@@ -1,9 +1,11 @@
 ﻿using Ailbhe.WebApi.Models;
 using System.Collections.Generic;
 using System.Web.Http;
+using System.Web.Http.Cors;
 
 namespace Ailbhe.WebApi.Controllers
 {
+    [EnableCors("http://localhost:8237", "*", "*")]
     public class ProductsController : ApiController
     {
         // GET: api/Products
