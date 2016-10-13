@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Cors;
+using System.Web.Http.OData;
 
 namespace Ailbhe.WebApi.Controllers
 {
@@ -10,10 +11,11 @@ namespace Ailbhe.WebApi.Controllers
     public class ProductsController : ApiController
     {
         // GET: api/Products
-        public IEnumerable<Product> Get()
+        [EnableQuery]
+        public IQueryable<Product> Get()
         {
             var repository = new ProductRepository();
-            return repository.Retrieve();
+            return repository.Retrieve().AsQueryable();
         }
 
         public IEnumerable<Product> Get(string search)
