@@ -9,9 +9,13 @@
     function ProductListCtrl(productResource) {
         var vm = this;
 
-        vm.SearchCriteria = "GDN";
+        //vm.SearchCriteria = "GDN";
 
-        productResource.query({ search: vm.SearchCriteria }, function (data) {
+        productResource.query({
+            $filter: "substringof('GDN', ProductCode) and Price ge 5 and Price le 20",
+            $orderby: "Price desc"
+        },
+        function (data) {
             vm.products = data;
         });
     }
