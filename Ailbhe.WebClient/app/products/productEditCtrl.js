@@ -11,13 +11,16 @@
         vm.product = {};
         vm.message = '';
 
-        productResource.get({ id: 100 },
+        productResource.get({ id: 5 },
             function (data) {
                 vm.product = data;
                 vm.originalProduct = angular.copy(data);
             },
             function (response) {
                 vm.message = response.statusText + "\r\n";
+                if (response.data.exceptionMessage) {
+                    vm.message += response.data.exceptionMessage;
+                }
             });
 
         if (vm.product && vm.product.productId) {
@@ -36,6 +39,9 @@
                     },
                     function (response) {
                         vm.message = response.statusText + "\r\n";
+                        if (response.data.exceptionMessage) {
+                            vm.message += response.data.exceptionMessage;
+                        }
                     });
             }
             else {
@@ -46,6 +52,9 @@
                     },
                     function (response) {
                         vm.message = response.statusText + "\r\n";
+                        if (response.data.exceptionMessage) {
+                            vm.message += response.data.exceptionMessage;
+                        }
                     });
             }
         };

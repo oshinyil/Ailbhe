@@ -1,7 +1,9 @@
 ﻿using Ailbhe.WebApi.Models;
+using System;
 using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Cors;
+using System.Web.Http.Description;
 using System.Web.Http.OData;
 
 namespace Ailbhe.WebApi.Controllers
@@ -11,69 +13,99 @@ namespace Ailbhe.WebApi.Controllers
     {
         // GET: api/Products
         [EnableQuery]
+        [ResponseType(typeof(Product))]
         public IHttpActionResult Get()
         {
-            var repository = new ProductRepository();
-            return Ok(repository.Retrieve().AsQueryable());
+            try
+            {
+                var repository = new ProductRepository();
+                return Ok(repository.Retrieve().AsQueryable());
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         // GET: api/Products/5
+        [ResponseType(typeof(Product))]
         public IHttpActionResult Get(int id)
         {
-            Product product;
-            var repository = new ProductRepository();
-
-            if (id > 0)
+            try
             {
-                var products = repository.Retrieve();
-                product = products.FirstOrDefault(p => p.ProductId == id);
-                if (product == null)
+                Product product;
+                var repository = new ProductRepository();
+
+                if (id > 0)
                 {
-                    return NotFound();
+                    var products = repository.Retrieve();
+                    product = products.FirstOrDefault(p => p.ProductId == id);
+                    if (product == null)
+                    {
+                        return NotFound();
+                    }
                 }
-            }
-            else
-            {
-                product = repository.Create();
-            }
+                else
+                {
+                    product = repository.Create();
+                }
 
-            return Ok(product);
+                return Ok(product);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
         }
 
         // POST: api/Products
         public IHttpActionResult Post([FromBody]Product product)
         {
-            if (product == null)
+            try
             {
-                return BadRequest("Product cannot be null");
-            }
+                if (product == null)
+                {
+                    return BadRequest("Product cannot be null");
+                }
 
-            var repository = new ProductRepository();
-            var newProduct = repository.Save(product);
-            if (newProduct == null)
+                var repository = new ProductRepository();
+                var newProduct = repository.Save(product);
+                if (newProduct == null)
+                {
+                    return Conflict();
+                }
+
+                return Created<Product>(Request.RequestUri + newProduct.ProductId.ToString(), newProduct);
+            }
+            catch (Exception ex)
             {
-                return Conflict();
+                return InternalServerError(ex);
             }
-
-            return Created<Product>(Request.RequestUri + newProduct.ProductId.ToString(), newProduct);
         }
 
         // PUT: api/Products/5
         public IHttpActionResult Put(int id, [FromBody]Product product)
         {
-            if (product == null)
+            try
             {
-                return BadRequest("Product cannot be null");
-            }
+                if (product == null)
+                {
+                    return BadRequest("Product cannot be null");
+                }
 
-            var repository = new ProductRepository();
-            var updatedProduct = repository.Save(id, product);
-            if (updatedProduct == null)
+                var repository = new ProductRepository();
+                var updatedProduct = repository.Save(id, product);
+                if (updatedProduct == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok();
+            }
+            catch (Exception ex)
             {
-                return NotFound();
+                return InternalServerError(ex);
             }
-
-            return Ok();
         }
 
         // DELETE: api/Products/5
