@@ -68,6 +68,11 @@ namespace Ailbhe.WebApi.Controllers
                     return BadRequest("Product cannot be null");
                 }
 
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
                 var repository = new ProductRepository();
                 var newProduct = repository.Save(product);
                 if (newProduct == null)
@@ -91,6 +96,11 @@ namespace Ailbhe.WebApi.Controllers
                 if (product == null)
                 {
                     return BadRequest("Product cannot be null");
+                }
+
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
                 }
 
                 var repository = new ProductRepository();
