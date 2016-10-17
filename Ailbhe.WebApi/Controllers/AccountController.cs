@@ -16,9 +16,11 @@ using Microsoft.Owin.Security.OAuth;
 using Ailbhe.WebApi.Models;
 using Ailbhe.WebApi.Providers;
 using Ailbhe.WebApi.Results;
+using System.Web.Http.Cors;
 
 namespace Ailbhe.WebApi.Controllers
 {
+    [EnableCors("http://localhost:8237", "*", "*")]
     [Authorize]
     [RoutePrefix("api/Account")]
     public class AccountController : ApiController
