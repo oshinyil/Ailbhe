@@ -6,13 +6,23 @@
         .factory("productResource",
                 ["$resource",
                  "appSettings",
+                 "currentUser",
                     productResource])
 
-    function productResource($resource, appSettings) {
+    function productResource($resource, appSettings, currentUser) {
         return $resource(appSettings.serverPath + "/api/products/:id",
                 null,
                 {
-                    "update": { method: "PUT" }
+                    "get": {
+                        headers: { "authorization": "Bearer " + currentUser.getProfile().token }
+                    },
+                    "save": {
+                        headers: { "authorization": "Bearer " + currentUser.getProfile().token }
+                    },
+                    "update": {
+                        method: "PUT",
+                        headers: { "authorization": "Bearer " + currentUser.getProfile().token }
+                    }
                 });
     }
 }());
